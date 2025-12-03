@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume2, ListMusic } from "lucide-react";
 import { motion } from "framer-motion";
-import { useOS } from "@/contexts/OSContext";
+import { useOS } from "../../contexts/OSContext";
 
 const SONGS = [
   { id: 1, title: "Lo-Fi Study Beats", artist: "Chill Vibes", duration: "3:45" },

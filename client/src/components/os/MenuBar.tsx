@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Wifi, Battery, Search, Command, Play, Pause, Volume2, Volume1, VolumeX } from "lucide-react";
-import { useOS } from "@/contexts/OSContext";
+import { useOS } from "../../contexts/OSContext";
 
 export function MenuBar() {
   const [time, setTime] = useState(new Date());

@@ -1,4 +1,4 @@
-import { useOS } from "@/contexts/OSContext";
+import { useOS } from "../../contexts/OSContext";
 import { MenuBar } from "./MenuBar";
 import { Dock } from "./Dock";
 import { Window } from "./Window";

@@ -1,4 +1,4 @@
-import { useOS, AppID } from "@/contexts/OSContext";
+import { useOS, AppID } from "../../contexts/OSContext";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 

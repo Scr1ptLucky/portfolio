@@ -1,4 +1,4 @@
-import { useOS, AppID } from "@/contexts/OSContext";
+import { useOS, AppID } from "../../contexts/OSContext";
 import { Rnd } from "react-rnd";
 import { X, Minus, Maximize2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

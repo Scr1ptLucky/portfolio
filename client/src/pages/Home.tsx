@@ -1,5 +1,5 @@
-import { Desktop } from "@/components/os/Desktop";
-import { OSProvider } from "@/contexts/OSContext";
+import { Desktop } from "../components/os/DesktopWindows";
+import { OSProvider } from "../contexts/OSContext";
 
 export default function Home() {
   return (
