@@ -83,11 +83,11 @@ export function MiniMusicPlayer() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 w-80">
-      {/* Compact Lo-Fi Player */}
-      <div className="bg-gradient-to-r from-gray-900/95 to-black/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-700/50 p-4 space-y-3">
+    <div className="fixed bottom-4 md:bottom-6 right-4 md:right-6 z-40 w-64 md:w-80 safe-area-inset-bottom">
+      {/* Compact Lo-Fi Player - Otimizado para Mobile */}
+      <div className="bg-gradient-to-r from-gray-900/95 to-black/95 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-700/50 p-3 md:p-4 space-y-2 md:space-y-3 transition-all duration-200 hover:shadow-2xl hover:border-gray-600/50">
         {/* Album Art - Lofi Car GIF */}
-        <div className="rounded-lg overflow-hidden h-20 bg-black flex items-center justify-center relative">
+        <div className="rounded-lg overflow-hidden h-16 md:h-20 bg-black flex items-center justify-center relative">
           <img
             src="/images/lofi-car.gif"
             alt="Lofi Car"
@@ -96,8 +96,8 @@ export function MiniMusicPlayer() {
         </div>
 
         {/* Track Info */}
-        <div className="space-y-1">
-          <h3 className="text-xs font-bold text-white truncate">Lofi Girl - 24/7 Beats</h3>
+        <div className="space-y-0.5">
+          <h3 className="text-xs md:text-sm font-bold text-white truncate">Lofi Girl - 24/7 Beats</h3>
           <p className="text-xs text-gray-400">Relaxante • Chill Vibes</p>
         </div>
 
@@ -110,22 +110,22 @@ export function MiniMusicPlayer() {
         </div>
 
         {/* Controls */}
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-2 md:gap-3">
           {/* Mute Button */}
           <button
             onClick={toggleMute}
-            className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 flex items-center justify-center transition-all shadow-lg flex-shrink-0 hover:shadow-blue-500/50"
+            className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 active:from-blue-600 active:to-blue-700 flex items-center justify-center transition-all shadow-lg flex-shrink-0 hover:shadow-blue-500/50"
             title={isMuted ? "Desmutar" : "Mutar"}
           >
             {isMuted ? (
-              <VolumeX className="w-4 h-4 text-white fill-current" />
+              <VolumeX className="w-4 h-4 md:w-5 md:h-5 text-white fill-current" />
             ) : (
-              <Volume2 className="w-4 h-4 text-white fill-current" />
+              <Volume2 className="w-4 h-4 md:w-5 md:h-5 text-white fill-current" />
             )}
           </button>
 
           {/* Volume Control */}
-          <div className="flex items-center gap-2 flex-1">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
             <input
               type="range"
               min="0"
@@ -138,13 +138,13 @@ export function MiniMusicPlayer() {
               }}
               title={`Volume: ${volume}%`}
             />
-            <span className="text-xs text-gray-400 w-8 text-right flex-shrink-0 font-semibold">{volume}%</span>
+            <span className="text-xs md:text-sm text-gray-400 w-7 md:w-8 text-right flex-shrink-0 font-semibold">{volume}%</span>
           </div>
         </div>
 
         {/* Live Badge */}
         <div className="text-center pt-1">
-          <span className="inline-block px-2 py-0.5 bg-gradient-to-r from-green-500/20 to-green-400/20 border border-green-500/50 rounded text-xs text-green-400 font-bold">
+          <span className="inline-block px-2 py-0.5 bg-gradient-to-r from-green-500/20 to-green-400/20 border border-green-500/50 rounded text-xs font-bold text-green-400 animate-pulse">
             ▶ TOCANDO
           </span>
         </div>
