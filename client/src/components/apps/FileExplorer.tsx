@@ -73,20 +73,20 @@ IDIOMAS
   return (
     <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col">
       {/* Toolbar */}
-      <div className="bg-blue-200 border-b border-blue-300 p-4 flex items-center gap-4">
+      <div className="bg-blue-200 border-b border-blue-300 p-3 md:p-4 flex items-center gap-3 md:gap-4">
         <button 
           onClick={() => setOpenFolder(null)}
-          className="px-3 py-1 bg-blue-300 hover:bg-blue-400 rounded text-sm font-semibold text-gray-800"
+          className="px-2 md:px-3 py-1 bg-blue-300 hover:bg-blue-400 rounded text-xs md:text-sm font-semibold text-gray-800"
         >
           ← Voltar
         </button>
-        <span className="text-sm text-gray-700 font-semibold">
+        <span className="text-xs md:text-sm text-gray-700 font-semibold">
           {openFolder ? `Meus Projetos` : "Meus Arquivos"}
         </span>
       </div>
 
       {/* File List */}
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-4 md:p-6 overflow-y-auto">
         <div className="grid grid-cols-1 gap-4">
           {currentFiles.map((file) => (
             <div
@@ -96,15 +96,15 @@ IDIOMAS
                   setOpenFolder(file.id);
                 }
               }}
-              className={`p-4 bg-white rounded-lg border-2 border-blue-200 flex items-center gap-4 transition-all ${
+              className={`p-3 md:p-4 bg-white rounded-lg border-2 border-blue-200 flex items-center gap-3 md:gap-4 transition-all ${
                 file.type === "folder"
                   ? "cursor-pointer hover:bg-blue-50 hover:border-blue-400"
                   : "cursor-default hover:bg-gray-50"
               }`}
             >
-              <file.icon className={`w-8 h-8 ${file.type === "folder" ? "text-yellow-500" : "text-blue-500"}`} />
-              <div className="flex-1">
-                <p className="font-semibold text-gray-800">{file.name}</p>
+              <file.icon className={`w-6 md:w-8 h-6 md:h-8 flex-shrink-0 ${file.type === "folder" ? "text-yellow-500" : "text-blue-500"}`} />
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-gray-800 text-sm md:text-base truncate">{file.name}</p>
                 <p className="text-xs text-gray-500">
                   {file.type === "folder" ? "Pasta" : "Documento"}
                 </p>
@@ -115,7 +115,7 @@ IDIOMAS
                     e.stopPropagation();
                     handleDownloadCV();
                   }}
-                  className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                  className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex-shrink-0"
                   title="Baixar Currículo"
                 >
                   <Download className="w-5 h-5" />
@@ -127,7 +127,7 @@ IDIOMAS
       </div>
 
       {/* Status Bar */}
-      <div className="bg-blue-200 border-t border-blue-300 px-6 py-2 text-xs text-gray-700">
+      <div className="bg-blue-200 border-t border-blue-300 px-4 md:px-6 py-2 text-xs text-gray-700">
         {currentFiles.length} item(ns)
       </div>
     </div>

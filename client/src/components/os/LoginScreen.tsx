@@ -48,13 +48,13 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
         }`}
       />
 
-      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-md px-4">
+      <div className="relative z-10 flex flex-col items-center gap-4 md:gap-6 w-full max-w-md px-4 md:px-6">
         {/* Avatar com GIF Cyberpunk */}
         <motion.div 
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-24 h-24 rounded-full overflow-hidden shadow-2xl border-4 border-white/20 backdrop-blur-md"
+          className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden shadow-2xl border-4 border-white/20 backdrop-blur-md"
         >
           <img
             ref={avatarRef}
@@ -69,7 +69,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-3xl font-bold text-white drop-shadow-lg"
+          className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center"
         >
           {name ? `Olá, ${name}` : "Bem-vindo"}
         </motion.h1>
@@ -79,7 +79,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-white/60 text-sm"
+          className="text-white/60 text-xs md:text-sm text-center"
         >
           Portfólio de Ian Leal - Desenvolvedor Junior
         </motion.p>
@@ -90,14 +90,14 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
           onSubmit={handleSubmit}
-          className="w-full max-w-[300px] relative"
+          className="w-full max-w-[280px] md:max-w-[300px] relative"
         >
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Digite seu nome..."
-            className="w-full px-5 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white placeholder:text-white/40 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all text-center shadow-lg font-medium"
+            className="w-full px-4 md:px-5 py-2 md:py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-sm md:text-base text-white placeholder:text-white/40 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all text-center shadow-lg font-medium"
             autoFocus
             disabled={isLoggingIn}
           />
@@ -128,7 +128,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-white/50 text-xs mt-6 text-center"
+            className="text-white/50 text-xs mt-4 md:mt-6 text-center px-2"
           >
             Digite seu nome e pressione Enter para entrar
           </motion.p>

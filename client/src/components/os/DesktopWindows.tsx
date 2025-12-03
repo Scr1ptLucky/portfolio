@@ -5,7 +5,6 @@ import { X } from "lucide-react";
 import { Calculator } from "../apps/Calculator";
 import { AboutMe } from "../apps/AboutMe";
 import { FileExplorer } from "../apps/FileExplorer";
-
 import { MiniMusicPlayer } from "../apps/MiniMusicPlayer";
 
 interface WindowState {
@@ -17,18 +16,28 @@ interface WindowState {
 
 export function DesktopWindows() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [windows, setWindows] = useState<Record<string, WindowState>>({
     aboutme: { id: "aboutme", isOpen: false, zIndex: 1, position: { x: 100, y: 100 } },
     files: { id: "files", isOpen: false, zIndex: 1, position: { x: 200, y: 150 } },
     calculator: { id: "calculator", isOpen: false, zIndex: 1, position: { x: 300, y: 200 } },
-
   });
 
   const draggedWindow = useRef<string | null>(null);
   const dragOffset = useRef({ x: 0, y: 0 });
   const desktopRef = useRef<HTMLDivElement>(null);
 
-  const handleLogin = () => {
+  // Detectar se é mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const handleLogin = (username: string) => {
     setIsLoggedIn(true);
   };
 
@@ -51,6 +60,8 @@ export function DesktopWindows() {
   };
 
   const handleMouseDown = (e: React.MouseEvent, id: string) => {
+    if (isMobile) return;
+    
     const target = e.target as HTMLElement;
     if (target.closest("button") || target.closest("input") || target.closest("iframe")) return;
     
@@ -63,6 +74,8 @@ export function DesktopWindows() {
   };
 
   useEffect(() => {
+    if (isMobile) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!draggedWindow.current) return;
 
@@ -95,63 +108,74 @@ export function DesktopWindows() {
         document.removeEventListener("mouseup", handleMouseUp);
       };
     }
-  }, [windows]);
+  }, [windows, isMobile]);
 
   const Window = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => {
-    const windowState = windows[id];
-    if (!windowState.isOpen) return null;
+    const window = windows[id];
+    
+    if (isMobile) {
+      // Modal fullscreen para mobile
+      return (
+        <motion.div
+          key={id}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="fixed inset-0 z-50 flex flex-col bg-gradient-to-br from-gray-900 to-gray-800 md:relative md:w-[600px] md:h-[500px] md:rounded-lg md:shadow-2xl md:border md:border-white/10"
+        >
+          {/* Title Bar */}
+          <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-gray-800 to-gray-700 border-b border-white/10 flex-shrink-0">
+            <h2 className="text-white font-semibold text-sm md:text-base">{title}</h2>
+            <button
+              onClick={() => closeWindow(id)}
+              className="p-1 hover:bg-white/10 rounded transition-colors"
+            >
+              <X className="w-4 h-4 md:w-5 md:h-5 text-white" />
+            </button>
+          </div>
 
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto">
+            {children}
+          </div>
+        </motion.div>
+      );
+    }
+
+    // Desktop version com drag
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
+        key={id}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        className="fixed bg-gray-100/90 backdrop-blur-md rounded-lg shadow-2xl border border-gray-300/50 flex flex-col"
+        exit={{ opacity: 0, scale: 0.95 }}
         style={{
-          width: "600px",
-          height: "500px",
-          left: `${windowState.position.x}px`,
-          top: `${windowState.position.y}px`,
-          zIndex: windowState.zIndex,
-          overflow: "hidden",
+          position: "absolute",
+          left: `${window.position.x}px`,
+          top: `${window.position.y}px`,
+          zIndex: window.zIndex,
         }}
+        className="w-[600px] h-[500px] bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg shadow-2xl border border-white/10 flex flex-col overflow-hidden"
       >
         {/* Title Bar */}
         <div
-          className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-3 flex items-center justify-between rounded-t-lg cursor-move select-none flex-shrink-0"
           onMouseDown={(e) => handleMouseDown(e, id)}
+          className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-gray-800 to-gray-700 border-b border-white/10 cursor-move flex-shrink-0"
         >
-          <span className="font-semibold text-sm">{title}</span>
-          <div className="flex gap-2">
-            <button
-              onClick={() => closeWindow(id)}
-              className="hover:bg-red-500 p-1 rounded transition-colors"
-              title="Fechar"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+          <h2 className="text-white font-semibold">{title}</h2>
+          <button
+            onClick={() => closeWindow(id)}
+            className="p-1 hover:bg-white/10 rounded transition-colors"
+          >
+            <X className="w-5 h-5 text-white" />
+          </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-y-auto">
           {children}
         </div>
       </motion.div>
-    );
-  };
-
-  const DesktopIcon = ({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) => {
-    return (
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={onClick}
-        className="flex flex-col items-center gap-1 p-2 rounded transition-colors group"
-      >
-        <span className="text-4xl hover:drop-shadow-lg transition-all">{icon}</span>
-        <span className="text-xs text-white text-center font-semibold drop-shadow-lg leading-tight">{label}</span>
-      </motion.button>
     );
   };
 
@@ -162,59 +186,68 @@ export function DesktopWindows() {
   return (
     <div
       ref={desktopRef}
-      className="fixed inset-0 bg-cover bg-center overflow-hidden"
+      className="fixed inset-0 z-0 bg-cover bg-center"
       style={{ backgroundImage: "url('/images/login-bg.gif')" }}
     >
-      {/* Desktop Icons - Left Sidebar */}
-      <div className="fixed left-2 top-8 flex flex-col gap-4 z-10">
-        <DesktopIcon
-          icon="👨‍💻"
-          label="Sobre Mim"
+      {/* Desktop Icons - Responsive Layout */}
+      <div className="absolute left-0 top-0 p-4 md:p-8 flex flex-wrap gap-4 md:gap-8 md:flex-col md:w-auto w-full">
+        {/* Sobre Mim */}
+        <button
           onClick={() => openWindow("aboutme")}
-        />
-        <DesktopIcon
-          icon="📁"
-          label="Arquivos"
+          className="flex flex-col items-center gap-2 hover:opacity-80 transition-opacity group"
+        >
+          <div className="text-4xl md:text-5xl group-hover:scale-110 transition-transform">👨‍💻</div>
+          <span className="text-white text-xs md:text-sm font-medium text-center max-w-[60px]">Sobre Mim</span>
+        </button>
+
+        {/* Arquivos */}
+        <button
           onClick={() => openWindow("files")}
-        />
-        <DesktopIcon
-          icon="🧮"
-          label="Calculadora"
+          className="flex flex-col items-center gap-2 hover:opacity-80 transition-opacity group"
+        >
+          <div className="text-4xl md:text-5xl group-hover:scale-110 transition-transform">📁</div>
+          <span className="text-white text-xs md:text-sm font-medium text-center max-w-[60px]">Arquivos</span>
+        </button>
+
+        {/* Calculadora */}
+        <button
           onClick={() => openWindow("calculator")}
-        />
+          className="flex flex-col items-center gap-2 hover:opacity-80 transition-opacity group"
+        >
+          <div className="text-4xl md:text-5xl group-hover:scale-110 transition-transform">🧮</div>
+          <span className="text-white text-xs md:text-sm font-medium text-center max-w-[60px]">Calculadora</span>
+        </button>
       </div>
 
-      {/* Windows */}
+      {/* Windows Container */}
       <AnimatePresence>
         {windows.aboutme.isOpen && (
-          <Window key="aboutme" id="aboutme" title="Sobre Mim - Ian Leal">
-            <AboutMe />
-          </Window>
-        )}
-        {windows.files.isOpen && (
-          <Window key="files" id="files" title="Meus Arquivos">
-            <FileExplorer />
-          </Window>
-        )}
-        {windows.calculator.isOpen && (
-          <Window key="calculator" id="calculator" title="Calculadora">
-            <Calculator />
-          </Window>
+          <div className={isMobile ? "fixed inset-0 z-50 overflow-y-auto" : "absolute inset-0 pointer-events-none"}>
+            <Window key="aboutme" id="aboutme" title="Sobre Mim">
+              <AboutMe />
+            </Window>
+          </div>
         )}
 
+        {windows.files.isOpen && (
+          <div className={isMobile ? "fixed inset-0 z-50 overflow-y-auto" : "absolute inset-0 pointer-events-none"}>
+            <Window key="files" id="files" title="Arquivos">
+              <FileExplorer />
+            </Window>
+          </div>
+        )}
+
+        {windows.calculator.isOpen && (
+          <div className={isMobile ? "fixed inset-0 z-50 overflow-y-auto" : "absolute inset-0 pointer-events-none"}>
+            <Window key="calculator" id="calculator" title="Calculadora">
+              <Calculator />
+            </Window>
+          </div>
+        )}
       </AnimatePresence>
 
       {/* Mini Music Player */}
       <MiniMusicPlayer />
-
-      {/* Taskbar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-500/40 to-blue-600/40 backdrop-blur-xl border-t border-blue-400/30 px-4 py-3 flex items-center gap-4 z-50">
-        <span className="text-white text-sm font-semibold">Ian Leal - Portfólio</span>
-        <div className="flex-1" />
-        <span className="text-white text-xs">
-          {new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
-        </span>
-      </div>
     </div>
   );
 }
